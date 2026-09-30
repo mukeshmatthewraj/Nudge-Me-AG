@@ -10,7 +10,7 @@ export function getApiBaseUrl(): string {
     return process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '');
   }
   if (Capacitor.isNativePlatform()) {
-    return 'http://10.137.51.39:8000';
+    return 'https://nudge-me-ag-backend.onrender.com';
   }
   return '';
 }
