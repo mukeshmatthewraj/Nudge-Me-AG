@@ -7,12 +7,14 @@ import {
   MapPin, 
   CloudRain, 
   Sun, 
+  Moon,
   Cloud, 
   Snowflake, 
   Smartphone, 
   Maximize2 
 } from 'lucide-react';
 import { requestNotificationPermission } from '@/services/notifications';
+import { useTheme } from '@/context/ThemeContext';
 
 interface HeaderProps {
   currentLat?: number | null;
@@ -39,6 +41,8 @@ export const Header: React.FC<HeaderProps> = ({
   onUseRealGps,
   isRealGps,
 }) => {
+  const { theme, toggleTheme } = useTheme();
+
   const handleRequestPermission = async () => {
     const granted = await requestNotificationPermission();
     onNotificationPermissionChange(granted);
@@ -47,61 +51,72 @@ export const Header: React.FC<HeaderProps> = ({
   const getWeatherIcon = () => {
     switch (currentWeather) {
       case 'rain':
-        return <CloudRain className="w-3.5 h-3.5 text-cyan-400" />;
+        return <CloudRain className="w-3.5 h-3.5" />;
       case 'snow':
-        return <Snowflake className="w-3.5 h-3.5 text-blue-300" />;
+        return <Snowflake className="w-3.5 h-3.5" />;
       case 'clouds':
-        return <Cloud className="w-3.5 h-3.5 text-slate-300" />;
+        return <Cloud className="w-3.5 h-3.5" />;
       case 'clear':
       default:
-        return <Sun className="w-3.5 h-3.5 text-amber-400" />;
+        return <Sun className="w-3.5 h-3.5" />;
     }
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full glass-panel border-b border-white/10 px-4 py-3">
+    <header className="sticky top-0 z-30 w-full glass-panel border-b border-neutral-200 dark:border-neutral-800 px-4 py-3 bg-white/80 dark:bg-black/80 transition-colors">
       <div className="flex items-center justify-between">
         {/* Brand */}
         <div className="flex items-center space-x-2.5">
-          <div className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 shadow-md shadow-indigo-500/30">
-            <span className="text-white font-black text-sm tracking-tighter">N</span>
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 border-2 border-slate-900 rounded-full"></span>
+          <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-black dark:bg-white text-white dark:text-black font-black text-sm tracking-tighter border border-neutral-300 dark:border-neutral-700 shadow-sm">
+            N
           </div>
           <div>
             <div className="flex items-center space-x-1.5">
-              <h1 className="text-base font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">
+              <h1 className="text-base font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
                 NudgeMe
               </h1>
-              <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                AI Mobile
+              <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">
+                AI
               </span>
             </div>
           </div>
         </div>
 
-        {/* Live Context Telemetry Chips */}
-        <div className="flex items-center space-x-2">
+        {/* Live Context Telemetry & Controls */}
+        <div className="flex items-center space-x-1.5 sm:space-x-2">
+          {/* Theme Toggle (Dark / Light) */}
+          <button
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            className="p-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 hover:scale-105 active:scale-95 transition-all shadow-sm"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-300" />
+            ) : (
+              <Moon className="w-4 h-4 text-neutral-700" />
+            )}
+          </button>
+
           {/* GPS Chip */}
           <button 
             type="button"
             onClick={onUseRealGps}
-            className={`flex items-center space-x-1 px-2 py-1 rounded-full text-[11px] font-medium transition-all ${
+            className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all border ${
               isRealGps 
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm' 
-                : 'glass-pill text-slate-300 hover:text-white hover:bg-white/10'
+                ? 'bg-neutral-900 text-white dark:bg-white dark:text-black border-transparent shadow-sm' 
+                : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-800'
             }`}
-            title={isRealGps ? 'Using Real Device GPS (Click to refresh)' : 'Simulated GPS (Click to detect Real Device GPS)'}
+            title={isRealGps ? 'Using Real Device GPS (Tap to refresh)' : 'Simulated GPS (Tap to detect Real Device GPS)'}
           >
-            <MapPin className={`w-3 h-3 ${isRealGps ? 'text-emerald-400' : 'text-indigo-400'} shrink-0`} />
-            <span className="truncate max-w-[70px]">
+            <MapPin className="w-3 h-3 shrink-0" />
+            <span className="truncate max-w-[65px]">
               {currentLat ? `${currentLat.toFixed(2)}, ${currentLng?.toFixed(2)}` : 'GPS'}
             </span>
-            <span className={`w-1.5 h-1.5 rounded-full ${isRealGps ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></span>
           </button>
 
           {/* Weather Chip */}
           <div 
-            className="flex items-center space-x-1 px-2 py-1 rounded-full text-[11px] font-medium glass-pill text-slate-300 capitalize"
+            className="flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-800 capitalize"
             title={`Weather: ${currentWeather || 'Clear'}, ${currentTemp !== null && currentTemp !== undefined ? `${currentTemp}°C` : ''}`}
           >
             {getWeatherIcon()}
@@ -111,11 +126,11 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Notification Permission Bell */}
           <button
             onClick={handleRequestPermission}
-            title={hasNotificationPermission ? 'Native Notifications Enabled' : 'Enable Notifications'}
-            className={`p-1.5 rounded-full transition-all ${
+            title={hasNotificationPermission ? 'Notifications Enabled' : 'Enable Notifications'}
+            className={`p-1.5 rounded-full border transition-all ${
               hasNotificationPermission 
-                ? 'text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20' 
-                : 'text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 animate-pulse'
+                ? 'border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white' 
+                : 'border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:text-black dark:hover:text-white bg-transparent animate-pulse'
             }`}
           >
             {hasNotificationPermission ? (
@@ -125,11 +140,11 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Device Frame View Switcher (Desktop preview convenience) */}
+          {/* Device Frame View Switcher (Desktop preview) */}
           <button
             onClick={onTogglePhoneFrame}
-            title={isPhoneFrame ? 'Switch to Fullscreen' : 'Switch to Mobile Phone Shell'}
-            className="p-1.5 rounded-full text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 transition-all hidden md:flex items-center justify-center"
+            title={isPhoneFrame ? 'Fullscreen' : 'Phone Shell'}
+            className="p-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:text-black dark:hover:text-white bg-neutral-100 dark:bg-neutral-900 transition-all hidden md:flex items-center justify-center"
           >
             {isPhoneFrame ? <Maximize2 className="w-3.5 h-3.5" /> : <Smartphone className="w-3.5 h-3.5" />}
           </button>

@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/Header';
 import { RemindersList } from '@/components/RemindersList';
 import { RadarMap } from '@/components/RadarMap';
-import { ContextSimulator } from '@/components/ContextSimulator';
 import { HistoryArchive } from '@/components/HistoryArchive';
 import { BottomNav, NavTab } from '@/components/BottomNav';
 import { QuickAddModal } from '@/components/QuickAddModal';
@@ -18,7 +17,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<NavTab>('nudges');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   
-  // Real-time or Simulated Context State
+  // Real-time Context State
   const [userLat, setUserLat] = useState<number>(37.7749);
   const [userLng, setUserLng] = useState<number>(-122.4194);
   const [isRealGps, setIsRealGps] = useState<boolean>(false);
@@ -36,7 +35,7 @@ export default function Home() {
         setCurrentTemp(Math.round(w.temperature_c));
       }
     } catch {
-      // ignore
+      // quiet fail
     }
   }, []);
 
@@ -118,11 +117,16 @@ export default function Home() {
       setHasNotificationPermission(Notification.permission === 'granted');
     }
 
-    // Try detecting device GPS if available
+    // Auto-detect GPS if available
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          // Keep default if user is far or let user simulate, but record accuracy
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          setUserLat(lat);
+          setUserLng(lng);
+          setIsRealGps(true);
+          fetchLiveWeather(lat, lng);
         },
         () => {},
         { timeout: 5000 }
@@ -133,21 +137,21 @@ export default function Home() {
   const activeRemindersCount = reminders.filter((r) => r.status === 'active').length;
 
   return (
-    <main className="min-h-screen bg-[#05070d] text-slate-100 flex flex-col items-center justify-start antialiased selection:bg-indigo-500/30">
+    <main className="min-h-screen bg-neutral-100 dark:bg-black text-neutral-900 dark:text-neutral-50 flex flex-col items-center justify-start antialiased transition-colors duration-200">
       {/* Mobile Handset Container Wrapper */}
       <div 
         className={`w-full transition-all duration-300 ${
           isPhoneFrame 
-            ? 'max-w-md my-0 sm:my-6 min-h-screen sm:min-h-[844px] rounded-none sm:rounded-[44px] border-0 sm:border-[8px] sm:border-slate-800 shadow-2xl relative overflow-hidden bg-[#0a0f1d] flex flex-col' 
-            : 'max-w-xl min-h-screen bg-[#0a0f1d] flex flex-col'
+            ? 'max-w-md my-0 sm:my-6 min-h-screen sm:min-h-[844px] rounded-none sm:rounded-[44px] border-0 sm:border-[8px] sm:border-neutral-300 dark:sm:border-neutral-800 shadow-2xl relative overflow-hidden bg-white dark:bg-black flex flex-col' 
+            : 'max-w-xl min-h-screen bg-white dark:bg-black flex flex-col'
         }`}
       >
         {/* Device Dynamic Island / Speaker Notch (phone frame mode) */}
         {isPhoneFrame && (
-          <div className="hidden sm:flex justify-center pt-2 pb-1 bg-slate-900/50">
-            <div className="w-24 h-4 bg-slate-950 rounded-full flex items-center justify-center space-x-2">
-              <span className="w-2 h-2 rounded-full bg-slate-800"></span>
-              <span className="w-2 h-2 rounded-full bg-indigo-500/40"></span>
+          <div className="hidden sm:flex justify-center pt-2 pb-1 bg-neutral-100 dark:bg-neutral-950">
+            <div className="w-24 h-4 bg-neutral-200 dark:bg-neutral-900 rounded-full flex items-center justify-center space-x-2">
+              <span className="w-2 h-2 rounded-full bg-neutral-400 dark:bg-neutral-700"></span>
+              <span className="w-2 h-2 rounded-full bg-neutral-400 dark:bg-neutral-600"></span>
             </div>
           </div>
         )}
@@ -167,7 +171,7 @@ export default function Home() {
         />
 
         {/* Dynamic Main View */}
-        <div className="flex-1 p-4 overflow-y-auto">
+        <div className="flex-1 p-4 pb-24 overflow-y-auto">
           {activeTab === 'nudges' && (
             <RemindersList
               reminders={reminders}
@@ -189,24 +193,6 @@ export default function Home() {
                 setIsRealGps(false);
                 fetchLiveWeather(lat, lng);
               }}
-            />
-          )}
-
-          {activeTab === 'simulator' && (
-            <ContextSimulator
-              currentLat={userLat}
-              currentLng={userLng}
-              onUpdateLocation={(lat, lng) => {
-                setUserLat(lat);
-                setUserLng(lng);
-                setIsRealGps(false);
-                fetchLiveWeather(lat, lng);
-              }}
-              currentWeather={currentWeather}
-              onUpdateWeather={setCurrentWeather}
-              currentTemp={currentTemp}
-              onUpdateTemp={setCurrentTemp}
-              onRefreshReminders={loadReminders}
             />
           )}
 

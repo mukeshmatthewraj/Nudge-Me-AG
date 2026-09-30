@@ -8,7 +8,6 @@ import {
   RotateCcw, 
   Trash2, 
   Calendar,
-  Sparkles,
   Search
 } from 'lucide-react';
 import { Reminder, ReminderStatus } from '@/types';
@@ -60,7 +59,7 @@ export const HistoryArchive: React.FC<HistoryArchiveProps> = ({ reminders, onRef
   };
 
   return (
-    <div className="space-y-4 pb-24">
+    <div className="space-y-4">
       {/* Search & Tabs */}
       <div className="space-y-2.5">
         <div className="relative">
@@ -69,24 +68,24 @@ export const HistoryArchive: React.FC<HistoryArchiveProps> = ({ reminders, onRef
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search history..."
-            className="w-full pl-9 pr-4 py-2 rounded-2xl glass-panel text-xs text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500/60"
+            className="w-full pl-9 pr-4 py-2 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-900 dark:text-neutral-50 placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white transition-colors"
           />
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+          <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-2.5" />
         </div>
 
         {/* Tab Buttons */}
-        <div className="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-slate-900/60 border border-white/5">
+        <div className="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
           <button
             onClick={() => setActiveTab('triggered')}
             className={`py-2 px-2 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition-all ${
               activeTab === 'triggered'
-                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30 shadow'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm'
+                : 'text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white'
             }`}
           >
             <BellRing className="w-3.5 h-3.5" />
             <span>Triggered</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 font-mono">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-mono">
               {getTabCount('triggered')}
             </span>
           </button>
@@ -95,13 +94,13 @@ export const HistoryArchive: React.FC<HistoryArchiveProps> = ({ reminders, onRef
             onClick={() => setActiveTab('snoozed')}
             className={`py-2 px-2 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition-all ${
               activeTab === 'snoozed'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm'
+                : 'text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white'
             }`}
           >
             <Clock3 className="w-3.5 h-3.5" />
             <span>Snoozed</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 font-mono">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-mono">
               {getTabCount('snoozed')}
             </span>
           </button>
@@ -110,13 +109,13 @@ export const HistoryArchive: React.FC<HistoryArchiveProps> = ({ reminders, onRef
             onClick={() => setActiveTab('completed')}
             className={`py-2 px-2 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition-all ${
               activeTab === 'completed'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm'
+                : 'text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white'
             }`}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Done</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 font-mono">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-mono">
               {getTabCount('completed')}
             </span>
           </button>
@@ -129,17 +128,17 @@ export const HistoryArchive: React.FC<HistoryArchiveProps> = ({ reminders, onRef
           {tabItems.map((rem) => (
             <div
               key={rem.id}
-              className="rounded-2xl glass-panel p-3.5 flex items-start justify-between gap-3 border border-white/5"
+              className="rounded-2xl p-3.5 flex items-start justify-between gap-3 bg-white dark:bg-[#0a0a0a] border border-neutral-200 dark:border-neutral-800 shadow-sm"
             >
               <div className="space-y-1 min-w-0">
                 <div className="flex items-center space-x-2">
-                  <h4 className="text-xs font-bold text-white truncate">{rem.title}</h4>
-                  <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/5 text-slate-300 font-mono">
+                  <h4 className="text-xs font-bold text-neutral-900 dark:text-neutral-100 truncate">{rem.title}</h4>
+                  <span className="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 font-mono border border-neutral-200 dark:border-neutral-800">
                     {rem.priority}
                   </span>
                 </div>
-                {rem.detail && <p className="text-[11px] text-slate-400 truncate">{rem.detail}</p>}
-                <div className="flex items-center space-x-2 text-[10px] text-slate-500">
+                {rem.detail && <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">{rem.detail}</p>}
+                <div className="flex items-center space-x-2 text-[10px] text-neutral-400">
                   <Calendar className="w-3 h-3" />
                   <span>
                     {rem.triggered_at
@@ -155,14 +154,14 @@ export const HistoryArchive: React.FC<HistoryArchiveProps> = ({ reminders, onRef
               <div className="flex items-center space-x-1 shrink-0">
                 <button
                   onClick={() => handleReactivate(rem.id)}
-                  className="p-1.5 rounded-lg text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-colors"
+                  className="p-1.5 rounded-lg text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                   title="Reactivate Nudge"
                 >
                   <RotateCcw className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(rem.id)}
-                  className="p-1.5 rounded-lg text-slate-500 hover:bg-rose-500/20 hover:text-rose-400 transition-colors"
+                  className="p-1.5 rounded-lg text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                   title="Delete"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -172,9 +171,9 @@ export const HistoryArchive: React.FC<HistoryArchiveProps> = ({ reminders, onRef
           ))}
         </div>
       ) : (
-        <div className="py-12 px-4 rounded-3xl glass-panel text-center space-y-2 border border-dashed border-white/10">
-          <p className="text-xs font-semibold text-slate-300">No {activeTab} nudges</p>
-          <p className="text-[11px] text-slate-500">
+        <div className="py-12 px-4 rounded-3xl text-center space-y-2 bg-neutral-50 dark:bg-[#0a0a0a] border border-dashed border-neutral-200 dark:border-neutral-800">
+          <p className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">No {activeTab} nudges</p>
+          <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
             Nudges that fire or get snoozed will appear here.
           </p>
         </div>

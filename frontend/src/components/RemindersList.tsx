@@ -2,17 +2,14 @@
 
 import React, { useState } from 'react';
 import { 
-  CheckCircle2, 
   Circle, 
   MapPin, 
   Clock, 
   CloudRain, 
-  AlertCircle, 
   MoreVertical, 
   Trash2, 
   Clock3, 
   Search, 
-  Sparkles,
   Zap,
   Navigation
 } from 'lucide-react';
@@ -66,7 +63,7 @@ export const RemindersList: React.FC<RemindersListProps> = ({
     }
   };
 
-  const handleSnooze = async (id: number, minutes: number) => {
+  const handleSnooze = async (id: number, minutes: number = 30) => {
     try {
       await api.updateStatus(id, 'snoozed', minutes);
       setActiveMenuId(null);
@@ -117,31 +114,31 @@ export const RemindersList: React.FC<RemindersListProps> = ({
   const getPriorityStyle = (priority: PriorityType) => {
     switch (priority) {
       case 'High':
-        return 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+        return 'bg-black text-white dark:bg-white dark:text-black font-bold';
       case 'Medium':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+        return 'bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200';
       case 'Low':
       default:
-        return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+        return 'border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400';
     }
   };
 
   const getTriggerIcon = (type: TriggerType) => {
     switch (type) {
       case 'location':
-        return <MapPin className="w-3.5 h-3.5 text-cyan-400" />;
+        return <MapPin className="w-3.5 h-3.5" />;
       case 'time':
-        return <Clock className="w-3.5 h-3.5 text-indigo-400" />;
+        return <Clock className="w-3.5 h-3.5" />;
       case 'weather':
-        return <CloudRain className="w-3.5 h-3.5 text-blue-400" />;
+        return <CloudRain className="w-3.5 h-3.5" />;
       case 'combined':
       default:
-        return <Zap className="w-3.5 h-3.5 text-amber-400" />;
+        return <Zap className="w-3.5 h-3.5" />;
     }
   };
 
   return (
-    <div className="space-y-4 pb-24">
+    <div className="space-y-4">
       {/* Search & Filter Header */}
       <div className="space-y-2.5">
         {/* Search Bar */}
@@ -151,13 +148,13 @@ export const RemindersList: React.FC<RemindersListProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search active nudges, places, notes..."
-            className="w-full pl-9 pr-4 py-2 rounded-2xl glass-panel text-xs text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500/60 transition-colors"
+            className="w-full pl-9 pr-8 py-2 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-900 dark:text-neutral-50 placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white transition-colors"
           />
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+          <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-2.5" />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-2.5 text-xs text-slate-400 hover:text-white"
+              className="absolute right-3 top-2 text-xs text-neutral-400 hover:text-black dark:hover:text-white"
             >
               ✕
             </button>
@@ -169,10 +166,10 @@ export const RemindersList: React.FC<RemindersListProps> = ({
           {/* Priority filter */}
           <button
             onClick={() => setPriorityFilter('all')}
-            className={`px-2.5 py-1 rounded-full whitespace-nowrap transition-all ${
+            className={`px-3 py-1 rounded-full whitespace-nowrap transition-all border ${
               priorityFilter === 'all'
-                ? 'bg-indigo-600 text-white font-semibold'
-                : 'glass-pill text-slate-400 hover:text-white'
+                ? 'bg-black text-white dark:bg-white dark:text-black border-transparent font-semibold shadow-sm'
+                : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-800 hover:text-black dark:hover:text-white'
             }`}
           >
             All Priorities
@@ -181,17 +178,17 @@ export const RemindersList: React.FC<RemindersListProps> = ({
             <button
               key={p}
               onClick={() => setPriorityFilter(priorityFilter === p ? 'all' : p)}
-              className={`px-2.5 py-1 rounded-full whitespace-nowrap transition-all ${
+              className={`px-3 py-1 rounded-full whitespace-nowrap transition-all border ${
                 priorityFilter === p
-                  ? getPriorityStyle(p) + ' border font-semibold'
-                  : 'glass-pill text-slate-400 hover:text-white'
+                  ? 'bg-black text-white dark:bg-white dark:text-black border-transparent font-semibold shadow-sm'
+                  : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-800 hover:text-black dark:hover:text-white'
               }`}
             >
               {p}
             </button>
           ))}
 
-          <span className="w-px h-4 bg-white/10 shrink-0 mx-1"></span>
+          <span className="w-px h-4 bg-neutral-200 dark:bg-neutral-800 shrink-0 mx-1"></span>
 
           {/* Trigger filter */}
           {[
@@ -204,10 +201,10 @@ export const RemindersList: React.FC<RemindersListProps> = ({
             <button
               key={t.id}
               onClick={() => setTriggerFilter(triggerFilter === t.id ? 'all' : t.id)}
-              className={`px-2.5 py-1 rounded-full whitespace-nowrap transition-all ${
+              className={`px-3 py-1 rounded-full whitespace-nowrap transition-all border ${
                 triggerFilter === t.id
-                  ? 'bg-purple-600 text-white font-semibold'
-                  : 'glass-pill text-slate-400 hover:text-white'
+                  ? 'bg-black text-white dark:bg-white dark:text-black border-transparent font-semibold shadow-sm'
+                  : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-800 hover:text-black dark:hover:text-white'
               }`}
             >
               {t.label}
@@ -218,7 +215,7 @@ export const RemindersList: React.FC<RemindersListProps> = ({
 
       {/* Reminders List Cards */}
       {filteredReminders.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {filteredReminders.map((rem) => {
             const distMeters = getDistance(rem.latitude, rem.longitude);
             const isInsideGeofence = distMeters !== null && distMeters <= rem.radius_meters;
@@ -226,15 +223,17 @@ export const RemindersList: React.FC<RemindersListProps> = ({
             return (
               <div
                 key={rem.id}
-                className={`relative rounded-2xl glass-panel p-4 transition-all hover:border-white/20 group ${
-                  isInsideGeofence ? 'ring-2 ring-emerald-500/50 bg-emerald-950/20' : ''
-                }`}
+                className={`relative rounded-2xl p-4 transition-all bg-white dark:bg-[#0a0a0a] border ${
+                  isInsideGeofence 
+                    ? 'border-black dark:border-white ring-2 ring-neutral-400/30 dark:ring-neutral-600/30' 
+                    : 'border-neutral-200 dark:border-neutral-800'
+                } hover:border-neutral-400 dark:hover:border-neutral-600 shadow-sm group`}
               >
                 <div className="flex items-start justify-between gap-3">
                   {/* Left: Complete Checkbox */}
                   <button
                     onClick={() => handleComplete(rem.id)}
-                    className="mt-0.5 text-slate-500 hover:text-emerald-400 transition-colors shrink-0"
+                    className="mt-0.5 text-neutral-400 hover:text-black dark:hover:text-white transition-colors shrink-0"
                     title="Mark Complete"
                   >
                     <Circle className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -243,12 +242,12 @@ export const RemindersList: React.FC<RemindersListProps> = ({
                   {/* Middle: Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2">
-                      <h3 className="text-sm font-bold text-white tracking-tight truncate">
+                      <h3 className="text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight truncate">
                         {rem.title}
                       </h3>
                       {/* Priority Tag */}
                       <span
-                        className={`text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded border ${getPriorityStyle(
+                        className={`text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full ${getPriorityStyle(
                           rem.priority
                         )}`}
                       >
@@ -257,7 +256,7 @@ export const RemindersList: React.FC<RemindersListProps> = ({
                     </div>
 
                     {rem.detail && (
-                      <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
                         {rem.detail}
                       </p>
                     )}
@@ -265,7 +264,7 @@ export const RemindersList: React.FC<RemindersListProps> = ({
                     {/* Trigger Condition Meta Chips */}
                     <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
                       {/* Trigger Type Badge */}
-                      <span className="flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-medium glass-pill text-slate-300">
+                      <span className="flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300">
                         {getTriggerIcon(rem.trigger_type)}
                         <span className="capitalize">{rem.trigger_type}</span>
                       </span>
@@ -273,10 +272,10 @@ export const RemindersList: React.FC<RemindersListProps> = ({
                       {/* Location & Dynamic Proximity Badge */}
                       {rem.address && (
                         <div
-                          className={`flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${
+                          className={`flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${
                             isInsideGeofence
-                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 animate-pulse'
-                              : 'glass-pill text-cyan-300'
+                              ? 'bg-black text-white dark:bg-white dark:text-black border-transparent animate-pulse'
+                              : 'bg-neutral-100 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300'
                           }`}
                         >
                           <Navigation className="w-2.5 h-2.5 shrink-0" />
@@ -291,7 +290,7 @@ export const RemindersList: React.FC<RemindersListProps> = ({
 
                       {/* Weather Prerequisite Badge */}
                       {rem.weather_condition && (
-                        <span className="flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-medium glass-pill text-blue-300 capitalize">
+                        <span className="flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 capitalize">
                           <CloudRain className="w-2.5 h-2.5" />
                           <span>Needs {rem.weather_condition}</span>
                         </span>
@@ -299,7 +298,7 @@ export const RemindersList: React.FC<RemindersListProps> = ({
 
                       {/* Time text / Alarm at Badge */}
                       {(rem.time_text || rem.alarm_at) && (
-                        <span className="flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-medium glass-pill text-indigo-300">
+                        <span className="flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300">
                           <Clock className="w-2.5 h-2.5" />
                           <span>{rem.time_text || (rem.alarm_at ? new Date(rem.alarm_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '')}</span>
                         </span>
@@ -311,39 +310,32 @@ export const RemindersList: React.FC<RemindersListProps> = ({
                   <div className="relative shrink-0">
                     <button
                       onClick={() => setActiveMenuId(activeMenuId === rem.id ? null : rem.id)}
-                      className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                      className="p-1 rounded-lg text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                     >
                       <MoreVertical className="w-4 h-4" />
                     </button>
 
                     {/* Dropdown Menu */}
                     {activeMenuId === rem.id && (
-                      <div className="absolute right-0 top-full mt-1 z-30 w-36 rounded-xl bg-slate-900 border border-white/15 shadow-2xl py-1 text-xs text-slate-300">
+                      <div className="absolute right-0 top-7 z-20 w-36 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xl p-1.5 space-y-1 text-xs text-neutral-900 dark:text-neutral-100">
                         <button
-                          onClick={() => handleSnooze(rem.id, 15)}
-                          className="w-full text-left px-3 py-1.5 hover:bg-white/10 flex items-center space-x-1.5"
+                          onClick={() => handleSnooze(rem.id, 30)}
+                          className="w-full flex items-center space-x-2 px-2.5 py-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-left transition-colors"
                         >
-                          <Clock3 className="w-3.5 h-3.5 text-amber-400" />
-                          <span>Snooze 15m</span>
+                          <Clock3 className="w-3.5 h-3.5" />
+                          <span>Snooze 30m</span>
                         </button>
                         <button
-                          onClick={() => handleSnooze(rem.id, 60)}
-                          className="w-full text-left px-3 py-1.5 hover:bg-white/10 flex items-center space-x-1.5"
+                          onClick={() => handleSnooze(rem.id, 120)}
+                          className="w-full flex items-center space-x-2 px-2.5 py-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-left transition-colors"
                         >
-                          <Clock3 className="w-3.5 h-3.5 text-amber-400" />
-                          <span>Snooze 1 hour</span>
+                          <Clock3 className="w-3.5 h-3.5" />
+                          <span>Snooze 2h</span>
                         </button>
-                        <button
-                          onClick={() => handleSnooze(rem.id, 1440)}
-                          className="w-full text-left px-3 py-1.5 hover:bg-white/10 flex items-center space-x-1.5"
-                        >
-                          <Clock3 className="w-3.5 h-3.5 text-amber-400" />
-                          <span>Snooze 1 day</span>
-                        </button>
-                        <div className="my-1 border-t border-white/10"></div>
+                        <div className="h-px bg-neutral-200 dark:bg-neutral-800 my-1" />
                         <button
                           onClick={() => handleDelete(rem.id)}
-                          className="w-full text-left px-3 py-1.5 hover:bg-rose-500/20 text-rose-400 flex items-center space-x-1.5"
+                          className="w-full flex items-center space-x-2 px-2.5 py-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-left text-neutral-500 hover:text-black dark:hover:text-white transition-colors"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                           <span>Delete</span>
@@ -358,28 +350,26 @@ export const RemindersList: React.FC<RemindersListProps> = ({
         </div>
       ) : (
         /* Empty State */
-        <div className="py-12 px-4 rounded-3xl glass-panel text-center space-y-4 border border-dashed border-white/10">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 mx-auto flex items-center justify-center">
-            <Sparkles className="w-6 h-6" />
+        <div className="text-center py-12 px-4 rounded-3xl bg-neutral-50 dark:bg-[#0a0a0a] border border-neutral-200 dark:border-neutral-800">
+          <div className="w-12 h-12 rounded-full bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 flex items-center justify-center mx-auto mb-3">
+            <Zap className="w-6 h-6 stroke-[1.75]" />
           </div>
-          <div className="space-y-1">
-            <h4 className="text-sm font-bold text-white">No active nudges found</h4>
-            <p className="text-xs text-slate-400 max-w-xs mx-auto">
-              Add a new context-aware reminder with voice or text, or seed demo items.
-            </p>
-          </div>
-          <div className="flex items-center justify-center space-x-3 pt-2">
+          <h3 className="text-sm font-bold text-neutral-900 dark:text-neutral-100">No active nudges</h3>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-xs mx-auto">
+            Create an intelligent reminder triggered by your real-world position, weather, or scheduled time.
+          </p>
+          <div className="mt-4 flex items-center justify-center space-x-2">
             <button
               onClick={onOpenAddModal}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/30"
+              className="px-4 py-2 rounded-full bg-black text-white dark:bg-white dark:text-black text-xs font-semibold hover:opacity-90 transition-opacity shadow-sm"
             >
               + Create Nudge
             </button>
             <button
               onClick={handleSeedDemo}
-              className="px-4 py-2 rounded-xl glass-pill hover:bg-white/10 text-slate-300 text-xs font-medium"
+              className="px-3 py-2 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs font-medium hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
             >
-              Load Demo Nudges
+              Seed Demo Items
             </button>
           </div>
         </div>
